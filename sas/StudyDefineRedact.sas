@@ -1,68 +1,24 @@
-*Do not delete below
-Note that this file is assuned to be in same folder as the this program.;
-   %macro program_path();
-	%LOCAL full_path path;
-
-	%let full_path = ;
-
-	/******************************
-	 * Section 1 ******************
-	 ******************************/
-
-	/* Find the full path (including filename) of the file that is running */
-	%IF &SYSPROCESSMODE.=SAS DMS Session %THEN %DO;				/* Display Manager */
-		%LET full_path = %sysget(SAS_EXECFILEPATH);
-	%END;
-	%ELSE %IF &SYSPROCESSMODE.=SAS Batch Mode %THEN %DO;		/* Batch mode */
-		%LET full_path = %sysfunc(getoption(sysin));
-	%END;
-    %ELSE %IF &SYSPROCESSMODE.=SAS Workspace Server %THEN %DO;	/* Enterprise Guide/SAS Studio */
-		%LET full_path = %sysfunc(dequote(%str(&_SASProgramfile)));
-	%END;
-	%ELSE %DO;
-		%PUT %str(ER)ROR: Unexpected SAS Environment - use SAS Display Manager, EG or Batch mode;
-		%GOTO exit;
-	%END;
-
-	/******************************
-	 * Section 2 ******************
-	 ******************************/
-
-	%let path = ;
-	%IF %LENGTH(&full_path.) > 0 %THEN %DO;
-		/* Extract the full path, by leaving out the filename */
-	    %LET path = %substr(&full_path.,1, %sysfunc(findc(&full_path.,\\,-%length(&full_path.)))-1);
-	%END;
-	%ELSE %DO;
-		%PUT %STR(ER)ROR: No program path could be extracted - the executing program seems to be temporary;
-		%PUT %STR(ER)ROR: program_path_v01 needs to run from a physically saved program to function properly;
-		%GOTO exit;
-	%END;
-
-	%exit:
-
-	/* Return path as text */
-    &path.
-%mend program_path;
-
-%include "%program_path()\RedactMacros.sas";
-
+*Specify your path to the RedactMacro.sas;
+%include "S:\Glandon\BCMiner\RedactMacros.sas";
 
 *Redact all study details
 studyname will be set to: REDACTED STUDY
 study description will be set to: A REDACTED STUDY DESCRIPTION
 
 1. Specify the path\name of the input define.xml file.
-2. Specify company name - will be used in the name of the redacted defie.xml as a hash value, e.g. define_ 3fbeb6a5a3e2f60d2a9c015a6f527a08 _redact.xml
-3. Specify phase of the study  - for define.xml miner tool to do statistics. See terminology below(Submission value). 
-Will be added to redacted study description: <StudyDescription>A redacted study description. Phase:3, TA:Asthma</StudyDescription>
-4. Specify Therapeutic Area of the study  - for define.xml miner tool to do statistics. See terminology at the bottom of this file. 
-5. Specify if all comments are to be removed, default is N.
-6. Specify if extended code list values should be removed. Default is N
-7. Specify the list of domains to remove is any. Default is blank.
-8. Specify if any code lists are to be removed.
-9. Specify if any other text must be redacted. Use quotes if text contains space;
-%redact_define(S:\Glandon\BCMiner\define-sdtm-3.1.2.xml, 
+2. Specify the output suffix to put on the name of the redacted define.xml, e.g. output_suffix=CDISC_1 will then name the output 
+   file define_CDISC_1_redact.xml. Default is blank.
+3. Specify company name - will be used in the name of the redacted defie.xml as a hash value, e.g. define_ 3fbeb6a5a3e2f60d2a9c015a6f527a08 _redact.xml
+4. Specify phase of the study  - for define.xml miner tool to do statistics. See terminology below(Submission value). 
+   Will be added to redacted study description: <StudyDescription>A redacted study description. Phase:3, TA:Asthma</StudyDescription>
+5. Specify Therapeutic Area of the study  - for define.xml miner tool to do statistics. See terminology at the bottom of this file. 
+6. Specify if all comments are to be removed, default is N.
+7. Specify if extended code list values should be removed. Default is N
+8. Specify the list of domains to remove is any. Default is blank.
+9. Specify if any code lists are to be removed.
+10. Specify if any other text must be redacted. Use quotes if text contains space;
+%redact_define(S:\Glandon\BCMiner\define-sdtm-3.1.2-lines.xml,
+               output_suffix=CDISC_1, 
                company_name=CDISC, 
                phase=PHASE III TRIAL, 
                TA=%bquote(Alzheimer's), 
