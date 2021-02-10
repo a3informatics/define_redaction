@@ -45,16 +45,24 @@ redact_text<-function(redact_txt,file_in,file_out){
 
 remove_extended_values <- function(file_in,file_out){
   define<-read_xml(file_in)
-  supp<-xml_find_all(define, '//d1:CodeListItem[@def:ExtendedValue=\"Yes\"]')
+  supp1<-xml_find_all(define, '//d1:EnumeratedItem[@def:ExtendedValue=\"Yes\"]')
+  supp2<-xml_find_all(define, '//d1:CodeListItem[@def:ExtendedValue=\"Yes\"]')
+  supp<-c(supp1,supp2)
   if (length(supp) > 0 )
   {
       define_redact<-read_xml(file_in)
       del<-xml_find_all(define_redact, '//d1:CodeListItem[@def:ExtendedValue=\"Yes\"]')
       print(del)
       xml_remove(del)
+    
+      del<-xml_find_all(define_redact, '//d1:EnumeratedItem[@def:ExtendedValue=\"Yes\"]')
+      print(del)
+      xml_remove(del)
       
       # Removing the extended values from the check values in any whereclause
-      ext_val<-xml_attr(xml_find_all(define, '//d1:CodeListItem[@def:ExtendedValue=\"Yes\"]'),"CodedValue", xml_ns(define))
+      ext_val1<-xml_attr(xml_find_all(define, '//d1:CodeListItem[@def:ExtendedValue=\"Yes\"]'),"CodedValue", xml_ns(define))
+      ext_val2<-xml_attr(xml_find_all(define, '//d1:EnumeratedItem[@def:ExtendedValue=\"Yes\"]'),"CodedValue", xml_ns(define))
+      ext_val=c(ext_val1,ext_val2)
       for (k in 1:length(ext_val)) {
         chk_val<-xml_text(xml_find_all(define, "//d1:CheckValue"))
         check_val_row<-xml_find_all(define, "//d1:CheckValue")
@@ -72,8 +80,6 @@ remove_extended_values <- function(file_in,file_out){
   }
 }
 
-
- 
 remove_domain <- function(domain,file_in,file_out){
   define<-read_xml(file_in)
   supp<-str_subset(xml_attr(xml_find_all(define, "//d1:ItemGroupDef"), "OID", xml_ns(define)), domain)
@@ -180,10 +186,10 @@ if (length(supp) > 0 )
 
 }
 
-redact_define <- function(file_in, company_name="ACME", phase="NA", TA="NA", remove_comments="N", remove_extended_cl_val="N", remove_domains=NULL, remove_CL=NULL, redact_text=NULL){
+redact_define <- function(file_in, output_suffix="NA", company_name="ACME", phase="NA", TA="NA", remove_comments="N", remove_extended_cl_val="N", remove_domains=NULL, remove_CL=NULL, redact_text=NULL){
 
   #HASH convert company name. to be used in output filename.
-  name <-paste("define_",md5(company_name),"_redact.xml", sep="")
+  name <-paste("define_",output_suffix,"_redact.xml", sep="")
   #Initially reads in the define - after study details have been removed the redacted define (name) is processed as input below
   remove_study_details(file_in,name,phase,TA)
   #Remove comments in all domains.

@@ -1,7 +1,7 @@
 #set working directory - edit to fit your own wd
 setwd("~/S-cubed Aps/BC Miner - General/RedactScripts/R/")
 #Do not delete below
-source("RedactDefineFunctions.R")
+source("Version 1.2 2021-02-10/RedactDefineFunctions.R")
 
 
 #Redact all study details
@@ -9,20 +9,23 @@ source("RedactDefineFunctions.R")
 #study description will be set to: A redacted study description
 
 # 1. Specify the name of the input define.xml file. If not in folder set in setwd above then put in full path.
-# 2. Specify company name - will be used in the name of the redacted defie.xml as a hash value, e.g. define_3fbeb6a5a3e2f60d2a9c015a6f527a08_redact.xml
-# 3. Specify phase of the study  - for define.xml miner tool to do statistics. 
+# 2. Specify the output suffix to put on the name of the redacted define.xml, e.g. output_suffix=CDISC_1 will then name the output 
+#    file define_CDISC_1_redact.xml. Default is NA.
+# 3. Specify company name - will be used in the name of the redacted defie.xml as a hash value, e.g. define_3fbeb6a5a3e2f60d2a9c015a6f527a08_redact.xml
+# 4. Specify phase of the study  - for define.xml miner tool to do statistics. 
 #    Will be added to redacted study description: <StudyDescription>A redacted study description. Phase:3, TA:Asthma</StudyDescription>
-# 4. Specify Therapeutic Area of the study  - for define.xml miner tool to do statistics. See terminology at the bottom of this file.
-# 5. Specify if all comments are to be removed, default is N.
-# 6. Specify if extended code list values should be removed. Default is N
-# 7. Specify the list of domains to remove, if any. Default is NULL.
-# 8. Specify the list of code lists to remove, if any. Defaults is NULL.
-# 9. Specify if any other text must be redacted. Use quotes if text contains space;
+# 5. Specify Therapeutic Area of the study  - for define.xml miner tool to do statistics. See terminology at the bottom of this file.
+# 6. Specify if all comments are to be removed, default is N.
+# 7. Specify if extended code list values should be removed. Default is N
+# 8. Specify the list of domains to remove, if any. Default is NULL.
+# 9. Specify the list of code lists to remove, if any. Defaults is NULL.
+# 10. Specify if any other text must be redacted. Use quotes if text contains space;
 
 #example of no comments are to be removed and no domains. Only study ID and study description will be removed.
 #redact_define("define.xml", company_name="ACME", phase="32", TA="Asthma")
                               
-redact_define("define-sdtm-3.1.2.xml", 
+redact_define("define-sdtm-3.1.2-lines.xml",
+              output_suffix="CDISC_1",
               company_name="CDISC", 
               phase="3", 
               TA="Alzheimer's", 
