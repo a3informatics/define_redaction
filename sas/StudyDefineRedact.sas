@@ -8,28 +8,29 @@ study description will be set to: A REDACTED STUDY DESCRIPTION
 1. Specify the path\name of the input define.xml file.
 2. Specify the output suffix to put on the name of the redacted define.xml, e.g. output_suffix=CDISC_1 will then name the output 
    file define_CDISC_1_redact.xml. Default is blank.
-3. Specify company name - will be used in the name of the redacted defie.xml as a hash value, e.g. define_ 3fbeb6a5a3e2f60d2a9c015a6f527a08 _redact.xml
-4. Specify phase of the study  - for define.xml miner tool to do statistics. See terminology below(Submission value). 
+3. Specify phase of the study  - for define.xml miner tool to do statistics. See terminology below(Submission value). 
    Will be added to redacted study description: <StudyDescription>A redacted study description. Phase:3, TA:Asthma</StudyDescription>
-5. Specify Therapeutic Area of the study  - for define.xml miner tool to do statistics. See terminology at the bottom of this file. 
-6. Specify if all comments are to be removed, default is N.
-7. Specify if extended code list values should be removed. Default is N
+4. Specify Therapeutic Area of the study  - for define.xml miner tool to do statistics. See terminology at the bottom of this file. 
+5. Specify if all comments are to be removed, default is N.
+6. Specify if extended code list values should be redacted. Default is N
+7. The added sequence if redacting extended values will result in duplicates
 8. Specify the list of domains to remove is any. Default is blank.
 9. Specify if any code lists are to be removed.
 10. Specify if any other text must be redacted. Use quotes if text contains space;
 %redact_define(S:\Glandon\BCMiner\define-sdtm-3.1.2-lines.xml,
                output_suffix=CDISC_1, 
-               company_name=CDISC, 
                phase=PHASE III TRIAL, 
                TA=%bquote(Alzheimer's), 
                remove_comments=Y, 
-               removed_extended_cl_val=Y, 
+               redact_extended_cl_val=Y,
+               rs='['||strip(_n_)||']', 
                remove_domains=IE FA,
                remove_CL=IETEST IETESTC, 
                redact_text='Miracle Drug' WONDER);
-      
-*example of no comments and extended values are to be removed and no domains and codelists. Only study ID and study description will be removed.;
-*%redact_define(S:\Glandon\BCMiner\define.xml, company_name=ACME, phase=PHASE I TRIAL, TA=Asthma, redact_text= );
+ 
+            
+*example of no comments removed and no domains and codelists. Only study ID and study description will be removed. Extended code list values are not redacted;
+*%redact_define(S:\Glandon\BCMiner\define.xml, phase=PHASE I TRIAL, TA=Asthma, redact_text= );
 
 *Trial Phase to use: We use the CDISC term:
 TPHASE (C66737)
