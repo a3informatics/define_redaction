@@ -87,8 +87,8 @@ run;
 	proc sql noprint;
 		select distinct	table
 			,	column 
-		into	:domains	separated by "ï¿½"
-			,	:vars 		separated by "ï¿½"
+		into	:domains	separated by "¤"
+			,	:vars 		separated by "¤"
 
 		from init
 			where substr(column,3) not in('TESTCD', 'ORRES', 'ORRESU');
@@ -122,9 +122,9 @@ run;
 	run;
 
 	* Run through the extracted tables one by one, and extract all available data;
-	%do i=1 %to %sysfunc(countw(&domains.,ï¿½));
-		%let domain = %scan(&domains.,&i.,ï¿½);
-		%let var	= %scan(&vars.,&i.,ï¿½);
+	%do i=1 %to %sysfunc(countw(&domains.,¤));
+		%let domain = %scan(&domains.,&i.,¤);
+		%let var	= %scan(&vars.,&i.,¤);
 
 		/* Get list of variable names */
 		%let varnames=;
