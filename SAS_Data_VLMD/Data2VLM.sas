@@ -9,14 +9,18 @@
 *******CHANGE*******: file reference to the macro to fit your location;
 %include "S:\Glandon\BCMiner\VLMdata\Data2VLM_macro.sas";
 *******SPECIFY*******: the location of the SAS datasets;
-libname indata  "S:\Glandon\CDISC Pilot\tabulations\datasets";
+libname in  "S:\Glandon\CDISC Pilot\tabulations\datasets";
 
 *******INPUT PARAMETERS********
 * 1. indat - the libanme assigned above;
 * 2. TA - Therapeutic Area - see list below. If not in the list put in the relevant text;
 * 3. phase - phase of trial - see list below;
 * 4. out - the location and name of the excel output;
-%VLMD_data(indata, TA=%bquote(Alzheimer's), phase=PHASE III TRIAL, out=S:\Glandon\BCMiner\VLMdata\VLMD.xlsx);
+* 5. Parameter remds to specify list of domains to be excluded from the analysis (default %str(not in("TI" "IE" "PC"))); 
+* If additional/change to the default then use the remds=%str(not in("TI" "IE" "PC")):
+* %VLMD_data(in, TA=%bquote(Alzheimer's), phase=PHASE III TRIAL, out=S:\Glandon\BCMiner\VLMdata\VLMD_v1.xlsx, remds=%str(not in("TI" "IE" "PC" "PP")));
+* Not using the remds will remove the TI, IT and PC domains as specified in the default;
+%VLMD_data(in, TA=%bquote(Alzheimer's), phase=PHASE III TRIAL, out=S:\Glandon\BCMiner\VLMdata\VLMD.xlsx);
 
 * NOTE:
 * The WORK directory will contain two datasets: 
